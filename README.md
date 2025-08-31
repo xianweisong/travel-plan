@@ -1,6 +1,6 @@
 # travel-plan
 
-This project serves a simple welcome page.
+This project hosts an editable travel plan page.
 
 ## Getting Started
 
@@ -16,6 +16,6 @@ This project serves a simple welcome page.
    npm start
    ```
 
-3. Open your browser to `http://localhost:8080/` to see the welcome page. If this
-   container exposes port 8080 to the Internet, others can reach it at the
+3. Open your browser to `http://localhost:8080/` to edit the travel plan. If
+   this container exposes port 8080 to the Internet, others can reach it at the
    container's public URL.
