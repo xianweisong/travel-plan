@@ -1,21 +1,19 @@
-# travel-plan
+# 旅行计划
 
-This project hosts an editable travel plan page.
+此项目提供一个可编辑的旅行计划页面。
 
-## Getting Started
+## 快速开始
 
-1. Install dependencies:
+1. 安装依赖：
 
    ```sh
    npm install
    ```
 
-2. Start the server:
+2. 启动服务器：
 
    ```sh
    npm start
    ```
 
-3. Open your browser to `http://localhost:8080/` to edit the travel plan. If
-   this container exposes port 8080 to the Internet, others can reach it at the
-   container's public URL.
+3. 打开浏览器访问 `http://localhost:8080/` 以编辑旅行计划。如果容器将 8080 端口暴露到互联网，其他人也可以通过容器的公共 URL 访问。
