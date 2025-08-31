@@ -2,9 +2,98 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Welcome</title>
+  <title>Travel Plan Editor</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    section { margin-bottom: 20px; }
+    label { display: block; margin-top: 8px; }
+    input[type="text"], input[type="url"] { width: 100%; padding: 4px; }
+  </style>
 </head>
 <body>
-  <h1>Welcome to Travel Plan!</h1>
+  <h1>Travel Plan</h1>
+  <form id="travel-form">
+    <section>
+      <h2>1. Departure</h2>
+      <label for="departure-location">Departure location (home, company, etc.)</label>
+      <input type="text" id="departure-location" />
+    </section>
+
+    <section>
+      <h2>2. Transportation</h2>
+
+      <h3>2.1 Taxi</h3>
+      <label for="taxi-duration">Duration</label>
+      <input type="text" id="taxi-duration" />
+      <label for="taxi-cost">Cost</label>
+      <input type="text" id="taxi-cost" />
+      <label for="taxi-link">Gaode Link</label>
+      <input type="url" id="taxi-link" />
+
+      <h3>2.2 Walking</h3>
+      <label for="walk-duration">Duration</label>
+      <input type="text" id="walk-duration" />
+      <label for="walk-link">Gaode Link</label>
+      <input type="url" id="walk-link" />
+
+      <h3>2.3 High-speed Train</h3>
+      <label for="train-duration">Duration</label>
+      <input type="text" id="train-duration" />
+      <label for="train-entry">Departure station</label>
+      <input type="text" id="train-entry" />
+      <label for="train-exit">Arrival station</label>
+      <input type="text" id="train-exit" />
+      <label for="train-link">Gaode Link</label>
+      <input type="url" id="train-link" />
+
+      <h3>2.4 Subway</h3>
+      <label for="subway-duration">Duration</label>
+      <input type="text" id="subway-duration" />
+      <label for="subway-entry">Entrance</label>
+      <input type="text" id="subway-entry" />
+      <label for="subway-exit">Exit</label>
+      <input type="text" id="subway-exit" />
+      <label for="subway-link">Gaode Link</label>
+      <input type="url" id="subway-link" />
+
+      <h3>2.5 Plane</h3>
+      <label for="plane-duration">Duration</label>
+      <input type="text" id="plane-duration" />
+      <label for="plane-entry">Departure terminal</label>
+      <input type="text" id="plane-entry" />
+      <label for="plane-exit">Arrival terminal</label>
+      <input type="text" id="plane-exit" />
+      <label for="plane-link">Gaode Link</label>
+      <input type="url" id="plane-link" />
+    </section>
+
+    <section>
+      <h2>3. Hotel</h2>
+      <label for="hotel-cost">Cost</label>
+      <input type="text" id="hotel-cost" />
+      <label for="hotel-link">Gaode Link</label>
+      <input type="url" id="hotel-link" />
+    </section>
+
+    <section>
+      <h2>4. Dining</h2>
+      <label for="dining-cost">Cost</label>
+      <input type="text" id="dining-cost" />
+      <label for="dining-link">Gaode Link</label>
+      <input type="url" id="dining-link" />
+    </section>
+  </form>
+
+  <script>
+    const form = document.getElementById('travel-form');
+    const fields = Array.from(form.elements).filter(el => el.tagName === 'INPUT');
+    fields.forEach(field => {
+      const saved = localStorage.getItem(field.id);
+      if (saved) field.value = saved;
+      field.addEventListener('input', () => {
+        localStorage.setItem(field.id, field.value);
+      });
+    });
+  </script>
 </body>
 </html>
