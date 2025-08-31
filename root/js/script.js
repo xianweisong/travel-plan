@@ -26,5 +26,4 @@ function addModule(type) {
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#travel-form input').forEach(attachPersistence);
-  ['taxi', 'walk', 'train', 'subway', 'plane'].forEach(addModule);
 });
