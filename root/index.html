@@ -12,8 +12,16 @@
     <form id="travel-form">
     <section>
       <h2>1. 出发</h2>
-      <label for="departure-location">出发地点（家、公司等）</label>
-      <input type="text" id="departure-location" />
+      <div id="home-container"></div>
+      <button type="button" onclick="addModule('home')">新增出发地</button>
+      <template id="home-template">
+        <div class="module">
+          <label for="home-location">出发地点（家、公司等）</label>
+          <input type="text" id="home-location" />
+          <label for="home-time">出发时间</label>
+          <input type="text" id="home-time" />
+        </div>
+      </template>
     </section>
 
     <section id="transportation">
@@ -50,14 +58,16 @@
       <button type="button" onclick="addModule('train')">新增高铁段</button>
       <template id="train-template">
         <div class="module">
-          <label for="train-duration">时长</label>
+          <label for="train-number">车次号</label>
+          <input type="text" id="train-number" />
+          <label for="train-departure">出发时间</label>
+          <input type="text" id="train-departure" />
+          <label for="train-duration">行驶时长</label>
           <input type="text" id="train-duration" />
-          <label for="train-entry">出发站</label>
+          <label for="train-entry">入站口</label>
           <input type="text" id="train-entry" />
-          <label for="train-exit">到达站</label>
-          <input type="text" id="train-exit" />
-          <label for="train-link">高德链接</label>
-          <input type="url" id="train-link" />
+          <label for="train-arrival">到站时间</label>
+          <input type="text" id="train-arrival" />
         </div>
       </template>
 
