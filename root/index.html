@@ -2,81 +2,111 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Travel Plan Editor</title>
+  <title>旅行计划编辑器</title>
   <link rel="stylesheet" href="./css/style.css">
   
 </head>
 <body>
   <div class="container">
-    <h1>Travel Plan</h1>
+    <h1>旅行计划</h1>
     <form id="travel-form">
     <section>
-      <h2>1. Departure</h2>
-      <label for="departure-location">Departure location (home, company, etc.)</label>
+      <h2>1. 出发</h2>
+      <label for="departure-location">出发地点（家、公司等）</label>
       <input type="text" id="departure-location" />
     </section>
 
-    <section>
-      <h2>2. Transportation</h2>
+    <section id="transportation">
+      <h2>2. 交通</h2>
 
-      <h3>2.1 Taxi</h3>
-      <label for="taxi-duration">Duration</label>
-      <input type="text" id="taxi-duration" />
-      <label for="taxi-cost">Cost</label>
-      <input type="text" id="taxi-cost" />
-      <label for="taxi-link">Gaode Link</label>
-      <input type="url" id="taxi-link" />
+      <h3>2.1 出租车</h3>
+      <div id="taxi-container"></div>
+      <button type="button" onclick="addModule('taxi')">新增出租车段</button>
+      <template id="taxi-template">
+        <div class="module">
+          <label for="taxi-duration">时长</label>
+          <input type="text" id="taxi-duration" />
+          <label for="taxi-cost">费用</label>
+          <input type="text" id="taxi-cost" />
+          <label for="taxi-link">高德链接</label>
+          <input type="url" id="taxi-link" />
+        </div>
+      </template>
 
-      <h3>2.2 Walking</h3>
-      <label for="walk-duration">Duration</label>
-      <input type="text" id="walk-duration" />
-      <label for="walk-link">Gaode Link</label>
-      <input type="url" id="walk-link" />
+      <h3>2.2 步行</h3>
+      <div id="walk-container"></div>
+      <button type="button" onclick="addModule('walk')">新增步行段</button>
+      <template id="walk-template">
+        <div class="module">
+          <label for="walk-duration">时长</label>
+          <input type="text" id="walk-duration" />
+          <label for="walk-link">高德链接</label>
+          <input type="url" id="walk-link" />
+        </div>
+      </template>
 
-      <h3>2.3 High-speed Train</h3>
-      <label for="train-duration">Duration</label>
-      <input type="text" id="train-duration" />
-      <label for="train-entry">Departure station</label>
-      <input type="text" id="train-entry" />
-      <label for="train-exit">Arrival station</label>
-      <input type="text" id="train-exit" />
-      <label for="train-link">Gaode Link</label>
-      <input type="url" id="train-link" />
+      <h3>2.3 高铁</h3>
+      <div id="train-container"></div>
+      <button type="button" onclick="addModule('train')">新增高铁段</button>
+      <template id="train-template">
+        <div class="module">
+          <label for="train-duration">时长</label>
+          <input type="text" id="train-duration" />
+          <label for="train-entry">出发站</label>
+          <input type="text" id="train-entry" />
+          <label for="train-exit">到达站</label>
+          <input type="text" id="train-exit" />
+          <label for="train-link">高德链接</label>
+          <input type="url" id="train-link" />
+        </div>
+      </template>
 
-      <h3>2.4 Subway</h3>
-      <label for="subway-duration">Duration</label>
-      <input type="text" id="subway-duration" />
-      <label for="subway-entry">Entrance</label>
-      <input type="text" id="subway-entry" />
-      <label for="subway-exit">Exit</label>
-      <input type="text" id="subway-exit" />
-      <label for="subway-link">Gaode Link</label>
-      <input type="url" id="subway-link" />
+      <h3>2.4 地铁</h3>
+      <div id="subway-container"></div>
+      <button type="button" onclick="addModule('subway')">新增地铁段</button>
+      <template id="subway-template">
+        <div class="module">
+          <label for="subway-duration">时长</label>
+          <input type="text" id="subway-duration" />
+          <label for="subway-entry">入口</label>
+          <input type="text" id="subway-entry" />
+          <label for="subway-exit">出口</label>
+          <input type="text" id="subway-exit" />
+          <label for="subway-link">高德链接</label>
+          <input type="url" id="subway-link" />
+        </div>
+      </template>
 
-      <h3>2.5 Plane</h3>
-      <label for="plane-duration">Duration</label>
-      <input type="text" id="plane-duration" />
-      <label for="plane-entry">Departure terminal</label>
-      <input type="text" id="plane-entry" />
-      <label for="plane-exit">Arrival terminal</label>
-      <input type="text" id="plane-exit" />
-      <label for="plane-link">Gaode Link</label>
-      <input type="url" id="plane-link" />
+      <h3>2.5 飞机</h3>
+      <div id="plane-container"></div>
+      <button type="button" onclick="addModule('plane')">新增飞机段</button>
+      <template id="plane-template">
+        <div class="module">
+          <label for="plane-duration">时长</label>
+          <input type="text" id="plane-duration" />
+          <label for="plane-entry">出发航站楼</label>
+          <input type="text" id="plane-entry" />
+          <label for="plane-exit">到达航站楼</label>
+          <input type="text" id="plane-exit" />
+          <label for="plane-link">高德链接</label>
+          <input type="url" id="plane-link" />
+        </div>
+      </template>
     </section>
 
     <section>
-      <h2>3. Hotel</h2>
-      <label for="hotel-cost">Cost</label>
+      <h2>3. 酒店</h2>
+      <label for="hotel-cost">费用</label>
       <input type="text" id="hotel-cost" />
-      <label for="hotel-link">Gaode Link</label>
+      <label for="hotel-link">高德链接</label>
       <input type="url" id="hotel-link" />
     </section>
 
     <section>
-      <h2>4. Dining</h2>
-      <label for="dining-cost">Cost</label>
+      <h2>4. 餐饮</h2>
+      <label for="dining-cost">费用</label>
       <input type="text" id="dining-cost" />
-      <label for="dining-link">Gaode Link</label>
+      <label for="dining-link">高德链接</label>
       <input type="url" id="dining-link" />
     </section>
     </form>

@@ -11,5 +11,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, '0.0.0.0', () => {
-  console.log(`Server listening on port ${port}`);
+  console.log(`服务器正在监听端口 ${port}`);
 });
