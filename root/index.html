@@ -1,130 +1,297 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <title>出行计划编辑器</title>
-  <link rel="stylesheet" href="./css/style.css">
+  <meta charset="UTF-8" />
+  <title>出行计划</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body>
-  <div class="container">
-    <h1>出行计划</h1>
+<body class="bg-gray-50">
+  <div id="root" class="min-h-screen p-4"></div>
+  <script type="text/babel">
+    const { useState } = React;
 
-    <section id="departure-section">
-      <h2>Step 1 出发信息</h2>
-      <label for="dep-location">出发地</label>
-      <input type="text" id="dep-location">
-      <label for="dep-time">出发时间</label>
-      <input type="datetime-local" id="dep-time">
-      <label for="dep-link">地图链接</label>
-      <input type="url" id="dep-link">
-      <button type="button" id="add-departure">生成出发地卡片</button>
-    </section>
+    const typeOptions = ['出发地', '出行', '酒店', '餐厅', '活动地点'];
+    const travelModes = ['高铁/动车', '飞机', '地铁/公交', '自驾/出租车'];
 
-    <section id="transport-section">
-      <h2>Step 2 出行方式</h2>
-      <div id="transport-buttons">
-        <button type="button" onclick="showTransportForm('subway')">地铁/自驾</button>
-        <button type="button" onclick="showTransportForm('train')">高铁/动车</button>
-        <button type="button" onclick="showTransportForm('plane')">飞机</button>
-      </div>
-      <div id="transport-form-container"></div>
+    const travelFieldMap = {
+      '高铁/动车': [
+        { name: 'trainNumber', label: '车次号' },
+        { name: 'departureStation', label: '出发站' },
+        { name: 'entrance', label: '进站口' },
+        { name: 'platform', label: '站台号' },
+        { name: 'arrivalStation', label: '到达站' },
+        { name: 'exit', label: '出站口' }
+      ],
+      '飞机': [
+        { name: 'flightNumber', label: '航班号' },
+        { name: 'departureAirport', label: '出发机场及航站楼' },
+        { name: 'gate', label: '登机口' },
+        { name: 'arrivalAirport', label: '到达机场及航站楼' },
+        { name: 'arrivalExit', label: '出站口' }
+      ],
+      '地铁/公交': [
+        { name: 'lineNumber', label: '线路号' },
+        { name: 'boardStation', label: '上车站点' },
+        { name: 'dropStation', label: '下车站点' },
+        { name: 'exitNumber', label: '出口编号' }
+      ],
+      '自驾/出租车': [
+        { name: 'origin', label: '出发地' },
+        { name: 'destination', label: '目的地' },
+        { name: 'driveDuration', label: '预计车程' }
+      ]
+    };
 
-      <template id="transport-subway-template">
-        <div class="module">
-          <label>起点</label><input type="text" class="start">
-          <label>终点</label><input type="text" class="end">
-          <label>耗时</label><input type="text" class="duration">
-          <label>换乘信息</label><input type="text" class="transfer">
-          <button type="button" class="confirm">生成出行工具卡片</button>
+    const hotelFields = [
+      { name: 'checkIn', label: '入住时间' },
+      { name: 'checkOut', label: '退房时间' },
+      { name: 'room', label: '房型/备注' }
+    ];
+
+    const restaurantFields = [
+      { name: 'cost', label: '人均消费' },
+      { name: 'note', label: '特色/备注' }
+    ];
+
+    const activityFields = [
+      { name: 'period', label: '活动时间段' },
+      { name: 'organizer', label: '主办方/备注' }
+    ];
+
+    const linkIcons = {
+      gaode: 'https://a.amap.com/favicon.ico',
+      xhs: 'https://www.xiaohongshu.com/favicon.ico',
+      meituan: 'https://www.meituan.com/favicon.ico'
+    };
+
+    function TravelForm({ onAdd }) {
+      const initialState = {
+        type: '出发地',
+        name: '',
+        duration: '',
+        links: { gaode: '', xhs: '', meituan: '' },
+        travelMode: '',
+        fields: {}
+      };
+      const [form, setForm] = useState(initialState);
+
+      const handleChange = (field, value) => {
+        setForm(prev => ({ ...prev, [field]: value }));
+      };
+
+      const handleLinkChange = (key, value) => {
+        setForm(prev => ({ ...prev, links: { ...prev.links, [key]: value } }));
+      };
+
+      const handleFieldChange = (key, value) => {
+        setForm(prev => ({ ...prev, fields: { ...prev.fields, [key]: value } }));
+      };
+
+      const handleTypeChange = e => {
+        const newType = e.target.value;
+        setForm({ ...initialState, type: newType });
+      };
+
+      const handleTravelModeChange = e => {
+        const mode = e.target.value;
+        setForm(prev => ({ ...prev, travelMode: mode, fields: {} }));
+      };
+
+      const handleSubmit = e => {
+        e.preventDefault();
+        const details = [];
+        if (form.type === '出行' && form.travelMode) {
+          travelFieldMap[form.travelMode].forEach(f => {
+            if (form.fields[f.name]) details.push({ label: f.label, value: form.fields[f.name] });
+          });
+        } else {
+          const map = {
+            '酒店': hotelFields,
+            '餐厅': restaurantFields,
+            '活动地点': activityFields
+          }[form.type];
+          if (map) {
+            map.forEach(f => {
+              if (form.fields[f.name]) details.push({ label: f.label, value: form.fields[f.name] });
+            });
+          }
+        }
+        const card = {
+          id: Date.now(),
+          type: form.type,
+          name: form.name,
+          duration: form.duration,
+          travelMode: form.type === '出行' ? form.travelMode : undefined,
+          details,
+          links: form.links
+        };
+        onAdd(card);
+        setForm(initialState);
+      };
+
+      const renderDynamicFields = () => {
+        if (form.type === '出行') {
+          return (
+            <>
+              <div className="mt-4">
+                <label className="block mb-1 font-medium">出行方式</label>
+                <div className="flex flex-wrap gap-4">
+                  {travelModes.map(m => (
+                    <label key={m} className="flex items-center gap-1">
+                      <input type="radio" name="travelMode" value={m} checked={form.travelMode === m} onChange={handleTravelModeChange} />
+                      {m}
+                    </label>
+                  ))}
+                </div>
+              </div>
+              {form.travelMode && travelFieldMap[form.travelMode].map(f => (
+                <div key={f.name} className="mt-2">
+                  <label className="block text-sm font-medium mb-1">{f.label}</label>
+                  <input type="text" className="w-full border rounded px-2 py-1" value={form.fields[f.name] || ''} onChange={e => handleFieldChange(f.name, e.target.value)} />
+                </div>
+              ))}
+            </>
+          );
+        }
+        if (form.type === '酒店') {
+          return hotelFields.map(f => (
+            <div key={f.name} className="mt-2">
+              <label className="block text-sm font-medium mb-1">{f.label}</label>
+              <input type="text" className="w-full border rounded px-2 py-1" value={form.fields[f.name] || ''} onChange={e => handleFieldChange(f.name, e.target.value)} />
+            </div>
+          ));
+        }
+        if (form.type === '餐厅') {
+          return restaurantFields.map(f => (
+            <div key={f.name} className="mt-2">
+              <label className="block text-sm font-medium mb-1">{f.label}</label>
+              <input type="text" className="w-full border rounded px-2 py-1" value={form.fields[f.name] || ''} onChange={e => handleFieldChange(f.name, e.target.value)} />
+            </div>
+          ));
+        }
+        if (form.type === '活动地点') {
+          return activityFields.map(f => (
+            <div key={f.name} className="mt-2">
+              <label className="block text-sm font-medium mb-1">{f.label}</label>
+              <input type="text" className="w-full border rounded px-2 py-1" value={form.fields[f.name] || ''} onChange={e => handleFieldChange(f.name, e.target.value)} />
+            </div>
+          ));
+        }
+        return null;
+      };
+
+      return (
+        <form onSubmit={handleSubmit} className="bg-white rounded shadow p-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">事项类型</label>
+            <select value={form.type} onChange={handleTypeChange} className="w-full border rounded px-2 py-1">
+              {typeOptions.map(t => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
+          </div>
+          <div className="mt-4">
+            <label className="block text-sm font-medium mb-1">事项名称</label>
+            <input type="text" className="w-full border rounded px-2 py-1" value={form.name} onChange={e => handleChange('name', e.target.value)} required />
+          </div>
+          <div className="mt-4">
+            <label className="block text-sm font-medium mb-1">预计所需时间（分钟）</label>
+            <input type="number" className="w-full border rounded px-2 py-1" value={form.duration} onChange={e => handleChange('duration', e.target.value)} />
+          </div>
+          <div className="mt-4">
+            <label className="block text-sm font-medium mb-1">外链</label>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <img src={linkIcons.gaode} alt="gaode" className="w-5 h-5" />
+                <input type="url" placeholder="高德" className="flex-1 border rounded px-2 py-1" value={form.links.gaode} onChange={e => handleLinkChange('gaode', e.target.value)} />
+              </div>
+              <div className="flex items-center gap-2">
+                <img src={linkIcons.xhs} alt="xhs" className="w-5 h-5" />
+                <input type="url" placeholder="小红书" className="flex-1 border rounded px-2 py-1" value={form.links.xhs} onChange={e => handleLinkChange('xhs', e.target.value)} />
+              </div>
+              <div className="flex items-center gap-2">
+                <img src={linkIcons.meituan} alt="meituan" className="w-5 h-5" />
+                <input type="url" placeholder="美团" className="flex-1 border rounded px-2 py-1" value={form.links.meituan} onChange={e => handleLinkChange('meituan', e.target.value)} />
+              </div>
+            </div>
+          </div>
+          {renderDynamicFields()}
+          <button type="submit" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">生成卡片</button>
+        </form>
+      );
+    }
+
+    function Card({ data, onDelete }) {
+      const [open, setOpen] = useState(false);
+      const typeIcons = {
+        '出发地': '📍',
+        '出行': '🚗',
+        '酒店': '🏨',
+        '餐厅': '🍽️',
+        '活动地点': '🎉'
+      };
+      return (
+        <div className="bg-white rounded shadow">
+          <div className="flex justify-between items-center p-4 cursor-pointer" onClick={() => setOpen(!open)}>
+            <div className="flex items-center gap-2">
+              <span>{typeIcons[data.type]}</span>
+              <h3 className="font-semibold">{data.name}</h3>
+            </div>
+            <div className="flex items-center gap-2">
+              {data.duration && <span className="text-sm text-gray-500">{data.duration} 分钟</span>}
+              <button className="text-red-500" onClick={e => { e.stopPropagation(); onDelete(data.id); }}>删除</button>
+            </div>
+          </div>
+          {open && (
+            <div className="border-t p-4 space-y-2">
+              {data.travelMode && <div>出行方式：{data.travelMode}</div>}
+              {data.details.map((d, i) => (
+                <div key={i}>{d.label}：{d.value}</div>
+              ))}
+              <div className="flex gap-2 pt-2">
+                {Object.entries(data.links).map(([key, url]) => (
+                  url ? (
+                    <a key={key} href={url} target="_blank" rel="noopener noreferrer">
+                      <img src={linkIcons[key]} alt={key} className="w-6 h-6" />
+                    </a>
+                  ) : null
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      </template>
+      );
+    }
 
-      <template id="transport-train-template">
-        <div class="module">
-          <label>车次</label><input type="text" class="number">
-          <label>出发站</label><input type="text" class="start">
-          <label>进站口</label><input type="text" class="entry">
-          <label>站台号</label><input type="text" class="platform">
-          <label>到站时间</label><input type="text" class="arrival">
-          <label>出站口</label><input type="text" class="exit">
-          <label>预计时长</label><input type="text" class="duration">
-          <button type="button" class="confirm">生成出行工具卡片</button>
+    function Timeline({ items, onDelete }) {
+      return (
+        <div className="mt-6 space-y-4">
+          {items.map(item => (
+            <Card key={item.id} data={item} onDelete={onDelete} />
+          ))}
         </div>
-      </template>
+      );
+    }
 
-      <template id="transport-plane-template">
-        <div class="module">
-          <label>航班号</label><input type="text" class="number">
-          <label>出发机场</label><input type="text" class="start">
-          <label>航站楼/登机口</label><input type="text" class="gate">
-          <label>到达机场</label><input type="text" class="end">
-          <label>到站出口</label><input type="text" class="exit">
-          <label>预计飞行时间</label><input type="text" class="duration">
-          <button type="button" class="confirm">生成出行工具卡片</button>
+    function App() {
+      const [cards, setCards] = useState([]);
+
+      const addCard = card => setCards(prev => [...prev, card]);
+      const deleteCard = id => setCards(prev => prev.filter(c => c.id !== id));
+
+      return (
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-3xl font-bold text-center mb-6">出行计划</h1>
+          <TravelForm onAdd={addCard} />
+          <Timeline items={cards} onDelete={deleteCard} />
         </div>
-      </template>
-    </section>
+      );
+    }
 
-    <section id="location-section">
-      <h2>Step 3 节点选择</h2>
-      <div id="location-buttons">
-        <button type="button" onclick="showLocationForm('hotel')">酒店</button>
-        <button type="button" onclick="showLocationForm('restaurant')">饭店</button>
-        <button type="button" onclick="showLocationForm('scenic')">景点</button>
-        <button type="button" onclick="showLocationForm('event')">活动会场</button>
-      </div>
-      <div id="location-form-container"></div>
-
-      <template id="location-hotel-template">
-        <div class="module">
-          <label>名称</label><input type="text" class="name">
-          <label>入住时间</label><input type="text" class="checkin">
-          <label>退房时间</label><input type="text" class="checkout">
-          <label>地图链接</label><input type="url" class="link">
-          <label>备注</label><input type="text" class="note">
-          <button type="button" class="confirm">生成地点卡片</button>
-        </div>
-      </template>
-
-      <template id="location-restaurant-template">
-        <div class="module">
-          <label>名称</label><input type="text" class="name">
-          <label>人均消费</label><input type="text" class="cost">
-          <label>特色菜备注</label><input type="text" class="note">
-          <label>预计用餐时间</label><input type="text" class="duration">
-          <label>小红书/高德链接</label><input type="url" class="link">
-          <button type="button" class="confirm">生成地点卡片</button>
-        </div>
-      </template>
-
-      <template id="location-scenic-template">
-        <div class="module">
-          <label>名称</label><input type="text" class="name">
-          <label>游玩时间</label><input type="text" class="duration">
-          <label>门票信息</label><input type="text" class="ticket">
-          <label>推荐理由</label><input type="text" class="note">
-          <label>相关链接</label><input type="url" class="link">
-          <button type="button" class="confirm">生成地点卡片</button>
-        </div>
-      </template>
-
-      <template id="location-event-template">
-        <div class="module">
-          <label>会场名</label><input type="text" class="name">
-          <label>活动时间</label><input type="text" class="time">
-          <label>主办方</label><input type="text" class="organizer">
-          <label>地图链接</label><input type="url" class="link">
-          <button type="button" class="confirm">生成地点卡片</button>
-        </div>
-      </template>
-    </section>
-
-    <section>
-      <h2>时间轴</h2>
-      <div id="timeline"></div>
-      <button type="button" id="export-json">导出JSON</button>
-    </section>
-  </div>
-  <script src="./js/script.js"></script>
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
 </body>
 </html>
