@@ -8,7 +8,7 @@
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-gray-50">
+<body class="bg-[#f7f7f8]">
   <div id="root" class="min-h-screen p-4"></div>
   <script type="text/babel">
     const { useState } = React;
@@ -147,7 +147,7 @@
                         value={m}
                         checked={form.travelMode === m}
                         onChange={handleTravelModeChange}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                        className="h-4 w-4 text-[#10a37f] focus:ring-[#10a37f]"
                       />
                       <span>{m}</span>
                     </label>
@@ -159,7 +159,7 @@
                   <label className="block text-sm font-medium mb-1">{f.label}</label>
                   <input
                     type={f.type || 'text'}
-                    className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#10a37f]"
                     value={form.fields[f.name] || ''}
                     onChange={e => handleFieldChange(f.name, e.target.value)}
                   />
@@ -174,7 +174,7 @@
               <label className="block text-sm font-medium mb-1">{f.label}</label>
               <input
                 type={f.type || 'text'}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#10a37f]"
                 value={form.fields[f.name] || ''}
                 onChange={e => handleFieldChange(f.name, e.target.value)}
               />
@@ -187,7 +187,7 @@
               <label className="block text-sm font-medium mb-1">{f.label}</label>
               <input
                 type={f.type || 'text'}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#10a37f]"
                 value={form.fields[f.name] || ''}
                 onChange={e => handleFieldChange(f.name, e.target.value)}
               />
@@ -200,7 +200,7 @@
               <label className="block text-sm font-medium mb-1">{f.label}</label>
               <input
                 type={f.type || 'text'}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#10a37f]"
                 value={form.fields[f.name] || ''}
                 onChange={e => handleFieldChange(f.name, e.target.value)}
               />
@@ -211,13 +211,13 @@
       };
 
       return (
-        <form onSubmit={handleSubmit} className="bg-white rounded shadow p-4">
+        <form onSubmit={handleSubmit} className="bg-white rounded border border-gray-200 shadow-sm p-4">
           <div>
             <label className="block text-sm font-medium mb-1">事项类型</label>
             <select
               value={form.type}
               onChange={handleTypeChange}
-              className="w-full border border-gray-300 rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#10a37f]"
             >
               {typeOptions.map(t => (
                 <option key={t} value={t}>{t}</option>
@@ -228,7 +228,7 @@
             <label className="block text-sm font-medium mb-1">事项名称</label>
             <input
               type="text"
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#10a37f]"
               value={form.name}
               onChange={e => handleChange('name', e.target.value)}
               required
@@ -238,7 +238,7 @@
             <label className="block text-sm font-medium mb-1">预计所需时间（分钟）</label>
             <input
               type="number"
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#10a37f]"
               value={form.duration}
               onChange={e => handleChange('duration', e.target.value)}
             />
@@ -261,7 +261,7 @@
             </div>
           </div>
           {renderDynamicFields()}
-          <button type="submit" className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">生成卡片</button>
+          <button type="submit" className="mt-4 px-4 py-2 bg-[#10a37f] hover:bg-[#0e8c68] text-white rounded">生成卡片</button>
         </form>
       );
     }
@@ -276,7 +276,7 @@
         '活动地点': '🎉'
       };
       return (
-        <div className="bg-white rounded shadow">
+        <div className="bg-white rounded border border-gray-200 shadow-sm">
           <div className="flex justify-between items-center p-4 cursor-pointer" onClick={() => setOpen(!open)}>
             <div className="flex items-center gap-2">
               <span>{typeIcons[data.type]}</span>
@@ -326,7 +326,7 @@
 
       return (
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold text-center mb-6">出行计划</h1>
+          <h1 className="text-3xl font-bold text-center mb-6 text-[#10a37f]">出行计划</h1>
           <TravelForm onAdd={addCard} />
           <Timeline items={cards} onDelete={deleteCard} />
         </div>
