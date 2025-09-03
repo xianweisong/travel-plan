@@ -1,128 +1,130 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
-  <title>旅行计划编辑器</title>
+  <title>出行计划编辑器</title>
   <link rel="stylesheet" href="./css/style.css">
-  
 </head>
 <body>
   <div class="container">
-    <h1>旅行计划</h1>
-    <form id="travel-form">
+    <h1>出行计划</h1>
+
+    <section id="departure-section">
+      <h2>Step 1 出发信息</h2>
+      <label for="dep-location">出发地</label>
+      <input type="text" id="dep-location">
+      <label for="dep-time">出发时间</label>
+      <input type="datetime-local" id="dep-time">
+      <label for="dep-link">地图链接</label>
+      <input type="url" id="dep-link">
+      <button type="button" id="add-departure">生成出发地卡片</button>
+    </section>
+
+    <section id="transport-section">
+      <h2>Step 2 出行方式</h2>
+      <div id="transport-buttons">
+        <button type="button" onclick="showTransportForm('subway')">地铁/自驾</button>
+        <button type="button" onclick="showTransportForm('train')">高铁/动车</button>
+        <button type="button" onclick="showTransportForm('plane')">飞机</button>
+      </div>
+      <div id="transport-form-container"></div>
+
+      <template id="transport-subway-template">
+        <div class="module">
+          <label>起点</label><input type="text" class="start">
+          <label>终点</label><input type="text" class="end">
+          <label>耗时</label><input type="text" class="duration">
+          <label>换乘信息</label><input type="text" class="transfer">
+          <button type="button" class="confirm">生成出行工具卡片</button>
+        </div>
+      </template>
+
+      <template id="transport-train-template">
+        <div class="module">
+          <label>车次</label><input type="text" class="number">
+          <label>出发站</label><input type="text" class="start">
+          <label>进站口</label><input type="text" class="entry">
+          <label>站台号</label><input type="text" class="platform">
+          <label>到站时间</label><input type="text" class="arrival">
+          <label>出站口</label><input type="text" class="exit">
+          <label>预计时长</label><input type="text" class="duration">
+          <button type="button" class="confirm">生成出行工具卡片</button>
+        </div>
+      </template>
+
+      <template id="transport-plane-template">
+        <div class="module">
+          <label>航班号</label><input type="text" class="number">
+          <label>出发机场</label><input type="text" class="start">
+          <label>航站楼/登机口</label><input type="text" class="gate">
+          <label>到达机场</label><input type="text" class="end">
+          <label>到站出口</label><input type="text" class="exit">
+          <label>预计飞行时间</label><input type="text" class="duration">
+          <button type="button" class="confirm">生成出行工具卡片</button>
+        </div>
+      </template>
+    </section>
+
+    <section id="location-section">
+      <h2>Step 3 节点选择</h2>
+      <div id="location-buttons">
+        <button type="button" onclick="showLocationForm('hotel')">酒店</button>
+        <button type="button" onclick="showLocationForm('restaurant')">饭店</button>
+        <button type="button" onclick="showLocationForm('scenic')">景点</button>
+        <button type="button" onclick="showLocationForm('event')">活动会场</button>
+      </div>
+      <div id="location-form-container"></div>
+
+      <template id="location-hotel-template">
+        <div class="module">
+          <label>名称</label><input type="text" class="name">
+          <label>入住时间</label><input type="text" class="checkin">
+          <label>退房时间</label><input type="text" class="checkout">
+          <label>地图链接</label><input type="url" class="link">
+          <label>备注</label><input type="text" class="note">
+          <button type="button" class="confirm">生成地点卡片</button>
+        </div>
+      </template>
+
+      <template id="location-restaurant-template">
+        <div class="module">
+          <label>名称</label><input type="text" class="name">
+          <label>人均消费</label><input type="text" class="cost">
+          <label>特色菜备注</label><input type="text" class="note">
+          <label>预计用餐时间</label><input type="text" class="duration">
+          <label>小红书/高德链接</label><input type="url" class="link">
+          <button type="button" class="confirm">生成地点卡片</button>
+        </div>
+      </template>
+
+      <template id="location-scenic-template">
+        <div class="module">
+          <label>名称</label><input type="text" class="name">
+          <label>游玩时间</label><input type="text" class="duration">
+          <label>门票信息</label><input type="text" class="ticket">
+          <label>推荐理由</label><input type="text" class="note">
+          <label>相关链接</label><input type="url" class="link">
+          <button type="button" class="confirm">生成地点卡片</button>
+        </div>
+      </template>
+
+      <template id="location-event-template">
+        <div class="module">
+          <label>会场名</label><input type="text" class="name">
+          <label>活动时间</label><input type="text" class="time">
+          <label>主办方</label><input type="text" class="organizer">
+          <label>地图链接</label><input type="url" class="link">
+          <button type="button" class="confirm">生成地点卡片</button>
+        </div>
+      </template>
+    </section>
+
     <section>
-      <h2>1. 出发</h2>
-      <div id="home-container"></div>
-      <button type="button" onclick="addModule('home')">新增出发地</button>
-      <template id="home-template">
-        <div class="module">
-          <label for="home-location">出发地点（家、公司等）</label>
-          <input type="text" id="home-location" />
-          <label for="home-time">出发时间</label>
-          <input type="text" id="home-time" />
-        </div>
-      </template>
+      <h2>时间轴</h2>
+      <div id="timeline"></div>
+      <button type="button" id="export-json">导出JSON</button>
     </section>
-
-    <section id="transportation">
-      <h2>2. 交通</h2>
-
-      <h3>2.1 出租车</h3>
-      <div id="taxi-container"></div>
-      <button type="button" onclick="addModule('taxi')">新增出租车段</button>
-      <template id="taxi-template">
-        <div class="module">
-          <label for="taxi-duration">时长</label>
-          <input type="text" id="taxi-duration" />
-          <label for="taxi-cost">费用</label>
-          <input type="text" id="taxi-cost" />
-          <label for="taxi-link">高德链接</label>
-          <input type="url" id="taxi-link" />
-        </div>
-      </template>
-
-      <h3>2.2 步行</h3>
-      <div id="walk-container"></div>
-      <button type="button" onclick="addModule('walk')">新增步行段</button>
-      <template id="walk-template">
-        <div class="module">
-          <label for="walk-duration">时长</label>
-          <input type="text" id="walk-duration" />
-          <label for="walk-link">高德链接</label>
-          <input type="url" id="walk-link" />
-        </div>
-      </template>
-
-      <h3>2.3 高铁</h3>
-      <div id="train-container"></div>
-      <button type="button" onclick="addModule('train')">新增高铁段</button>
-      <template id="train-template">
-        <div class="module">
-          <label for="train-number">车次号</label>
-          <input type="text" id="train-number" />
-          <label for="train-departure">出发时间</label>
-          <input type="text" id="train-departure" />
-          <label for="train-duration">行驶时长</label>
-          <input type="text" id="train-duration" />
-          <label for="train-entry">入站口</label>
-          <input type="text" id="train-entry" />
-          <label for="train-arrival">到站时间</label>
-          <input type="text" id="train-arrival" />
-        </div>
-      </template>
-
-      <h3>2.4 地铁</h3>
-      <div id="subway-container"></div>
-      <button type="button" onclick="addModule('subway')">新增地铁段</button>
-      <template id="subway-template">
-        <div class="module">
-          <label for="subway-duration">时长</label>
-          <input type="text" id="subway-duration" />
-          <label for="subway-entry">入口</label>
-          <input type="text" id="subway-entry" />
-          <label for="subway-exit">出口</label>
-          <input type="text" id="subway-exit" />
-          <label for="subway-link">高德链接</label>
-          <input type="url" id="subway-link" />
-        </div>
-      </template>
-
-      <h3>2.5 飞机</h3>
-      <div id="plane-container"></div>
-      <button type="button" onclick="addModule('plane')">新增飞机段</button>
-      <template id="plane-template">
-        <div class="module">
-          <label for="plane-duration">时长</label>
-          <input type="text" id="plane-duration" />
-          <label for="plane-entry">出发航站楼</label>
-          <input type="text" id="plane-entry" />
-          <label for="plane-exit">到达航站楼</label>
-          <input type="text" id="plane-exit" />
-          <label for="plane-link">高德链接</label>
-          <input type="url" id="plane-link" />
-        </div>
-      </template>
-    </section>
-
-    <section>
-      <h2>3. 酒店</h2>
-      <label for="hotel-cost">费用</label>
-      <input type="text" id="hotel-cost" />
-      <label for="hotel-link">高德链接</label>
-      <input type="url" id="hotel-link" />
-    </section>
-
-    <section>
-      <h2>4. 餐饮</h2>
-      <label for="dining-cost">费用</label>
-      <input type="text" id="dining-cost" />
-      <label for="dining-link">高德链接</label>
-      <input type="url" id="dining-link" />
-    </section>
-    </form>
   </div>
-
-  
   <script src="./js/script.js"></script>
 </body>
 </html>
